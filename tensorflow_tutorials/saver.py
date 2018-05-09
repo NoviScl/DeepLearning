@@ -6,16 +6,16 @@ import numpy as np
 #Save to file
 #remember to define the same dtype and shape when restore
 
-# W = tf.Variable([[1,2,3], [3,4,5]], dtype=tf.float32, name='weights')
-# v = tf.Variable([[1,2,3]], dtype=tf.float32, name='bias')
-#
-# init = tf.global_variables_initializer()
-# saver = tf.train.Saver()
-#
-# with tf.Session() as sess:
-#     sess.run(init)
-#     save_path = saver.save(sess, '/Users/sichenglei/Desktop/I2R/tensorGraph/my_net/save_net.ckpt')
-#     print ('Save to path: ', save_path)
+W = tf.Variable([[1,2,3], [3,4,5]], dtype=tf.float32, name='weights')
+b = tf.Variable([[1,2,3]], dtype=tf.float32, name='bias')
+
+init = tf.global_variables_initializer()
+saver = tf.train.Saver()
+
+with tf.Session() as sess:
+    sess.run(init)
+    save_path = saver.save(sess, '/Users/sichenglei/Desktop/I2R/tensorGraph/my_net/save_net.ckpt')
+    print ('Save to path: ', save_path)
 
 
 
@@ -33,6 +33,7 @@ b = tf.Variable(np.zeros((1,3)), dtype=tf.float32, name='bias')
 
 saver = tf.train.Saver()
 with tf.Session() as sess:
+	#must define the corresponding variables first
     saver.restore(sess, '/Users/sichenglei/Desktop/I2R/tensorGraph/my_net/save_net.ckpt')
     print ('weights: ', sess.run(W))
     print ('bias: ', sess.run(b))

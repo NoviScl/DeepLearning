@@ -35,7 +35,7 @@ def add_layer(inputs, in_size, out_size, layer_name, activation_function=None):
 
 def compute_accuracy(v_xs, v_ys):
     global prediction
-    y_pre = sess.run(prediction, feed_dict={xs: v_xs})
+    y_pre = sess.run(prediction, feed_dict={xs: v_xs, keep_prob: 1})
     correct_prediction = tf.equal(tf.argmax(y_pre, 1), tf.argmax(v_ys, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
     result = sess.run(accuracy, feed_dict={xs: v_xs, ys: v_ys})
@@ -72,6 +72,7 @@ for i in range(1000):
 
         train_writer.add_summary(train_result, i)
         test_writer.add_summary(test_result, i)
+
 
 
 

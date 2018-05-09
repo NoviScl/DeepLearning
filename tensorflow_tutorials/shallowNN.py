@@ -25,9 +25,9 @@ ys = tf.placeholder(tf.float32, [None, 1])
 layer1 = add_layer(xs, 1, 10, activation_function=tf.nn.relu)
 prediction = add_layer(layer1, 10, 1, activation_function=None)
 
-loss = tf.reduce_mean(tf.reduce_sum(tf.square(ys - prediction), axis=1))
+loss = tf.reduce_mean(tf.square(ys - prediction))
 
-train_step = tf.train.AdamOptimizer(0.1).minimize(loss)
+train_step = tf.train.AdamOptimizer(0.001).minimize(loss)
 
 init = tf.global_variables_initializer()
 sess = tf.Session()

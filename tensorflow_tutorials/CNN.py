@@ -41,6 +41,15 @@ def bias_variable(shape):
     initial = tf.constant(0.1, shape=shape)
     return tf.Variable(initial)
 
+
+#same padding: 
+#out_height = ceil(float(in_height) / float(strides[1]))
+#out_width = ceil(float(in_width) / float(strides[2]))
+
+#valid padding:
+#out_height = ceil(float(in_height - filter_height + 1) / float(strides[1]))
+#out_width = ceil(float(in_width - filter_width + 1) / float(strides[2]))
+
 def conv2d(x, W):
     #stride [1, height_movement, width_movement, 1] 'NHWC'
     #must have strides[0]=strides[3]=1
@@ -98,8 +107,7 @@ train_step = tf.train.AdamOptimizer(0.001).minimize(cross_entropy)
 init = tf.global_variables_initializer()
 sess = tf.Session()
 merge = tf.summary.merge_all()
-train_writer = tf.summary.FileWriter('/Users/sichenglei/Desktop/I2R/tensorGraph/logs/train', sess.graph)
-test_writer = tf.summary.FileWriter('/Users/sichenglei/Desktop/I2R/tensorGraph/logs/test', sess.graph)
+writer = tf.summary.FileWriter('/Users/sichenglei/Desktop/I2R/tensorGraph/logs/train', sess.graph)
 sess.run(init)
 
 for i in range(1000):

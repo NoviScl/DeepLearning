@@ -56,14 +56,18 @@ def RNN(X, weights, bias):
     outputs, states = tf.nn.dynamic_rnn(lstm_cell, X_in, initial_state=_init_state, time_major=False)
     #outputs contains all outputs for every time step, states is just the final state
     #outputs: [batch_size, max_time, cell.output_size]
+    #in this case, cell.out_size = n_hidden_units = 128
+    #so we need another fc to map it to classes
 
     #hidden layer for output as the final results
     #this method only works if it's many-to-one
     #results = tf.matmul(states[1], weights['out']) + bias['out']
 
     #OR:
-    #unpack to list steps*[(batch, outputs)]
-    outputs = tf.unstack(tf.transpose(outputs, [1,0,2]))    #output states (at) become the last output
+    #unpack to list steps*[(batch, outputs)], (default unstack axis=0)
+    #outputs = tf.unstack(tf.transpose(outputs, [1,0,2]))    #output states (at) become the last output
+    #same as:
+    outputs = tf.unstack(outputs, axis=1)
     results = tf.matmul(outputs[-1], weights['out']) + bias['out']
 
     return results

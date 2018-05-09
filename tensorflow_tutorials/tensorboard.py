@@ -36,7 +36,8 @@ layer1 = add_layer(xs, 1, 10, n_layer=1, activation_function=tf.nn.relu)
 prediction = add_layer(layer1, 10, 1, n_layer=2, activation_function=None)
 
 with tf.name_scope('loss'):
-    loss = tf.reduce_mean(tf.reduce_sum(tf.square(ys - prediction), axis=1))
+    #loss = tf.reduce_mean(tf.reduce_sum(tf.square(ys - prediction), axis=1))
+    loss = tf.reduce_mean(tf.square(ys - prediction))
     tf.summary.scalar('loss', loss)
 
 with tf.name_scope('train'):
