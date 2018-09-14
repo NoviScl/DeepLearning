@@ -30,11 +30,14 @@ def compute_accuracy(v_xs, v_ys):
     y_pre = sess.run(prediction, feed_dict={xs: v_xs, keep_prob: 1})
     correct_prediction = tf.equal(tf.argmax(y_pre, 1), tf.argmax(v_ys, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-    result = sess.run(accuracy, feed_dict={xs: v_xs, ys: v_ys})
+    # result = sess.run(accuracy, feed_dict={xs: v_xs, ys: v_ys})
+    result = sess.run(accuracy)
     return result
 
 def weight_variable(shape):
     initial = tf.truncated_normal(shape, stddev=0.1)
+    #xavier initialization:
+    #initial = tf.truncated_normal(shape, stddev=1.0/(shape[1]*shape[2]))
     return tf.Variable(initial)
 
 def bias_variable(shape):
@@ -51,6 +54,7 @@ def bias_variable(shape):
 #out_width = ceil(float(in_width - filter_width + 1) / float(strides[2]))
 
 def conv2d(x, W):
+    #W: filter: [H,W,inC, outC]
     #stride [1, height_movement, width_movement, 1] 'NHWC'
     #must have strides[0]=strides[3]=1
     return tf.nn.conv2d(x, W, strides=[1,1,1,1], padding='SAME')
@@ -78,7 +82,7 @@ h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)    #output_size: 28*28*
 h_pool1 = max_pool_2x2(h_conv1)                             #output_size: 14*14*32
 
 #conv2 layer
-W_conv2 = weight_variable([5,5,32,64])       #patch 5*5, in_channel=32, out_channel=32
+W_conv2 = weight_variable([5,5,32,64])       #patch 5*5, in_channel=32, out_channel=64
 b_conv2=bias_variable([64])
 h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)    #output_size: 14*14*64
 h_pool2 = max_pool_2x2(h_conv2)                             #output_size: 7*7*64
@@ -115,6 +119,8 @@ for i in range(1000):
     sess.run(train_step, feed_dict={xs: batch_xs, ys:batch_ys, keep_prob: 0.5})
     if i%50==0:
         print (compute_accuracy(mnist.test.images[:1000], mnist.test.labels[:1000]))
+        result = sess.run(merge, feed_dict={xs: batch_xs, ys: batch_ys})
+        writer.add_summary(result, i)
 
 
 

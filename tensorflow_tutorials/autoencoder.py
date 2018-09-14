@@ -44,7 +44,7 @@ def encoder(x):
 	layer_1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['encoder_h1']),
 		bias['encoder_b1']))
 	#Encoder hidder layer with sigmoid activation #2
-	layer_2 = tf.nn.softmax(tf.add(tf.matmul(layer_1, weights['encoder_h2']),
+	layer_2 = tf.nn.sigmoid(tf.add(tf.matmul(layer_1, weights['encoder_h2']),
 		bias['encoder_b2']))
 	return layer_2
 

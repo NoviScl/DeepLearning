@@ -1,7 +1,7 @@
 import tensorflow as tf 
 
 class TrainConfig:
-	batch_size = 20
+	batch_size = 30
 	time_steps = 20 
 	input_size = 10
 	output_size = 2 
@@ -31,7 +31,6 @@ class RNN(object):
 				#Ws: (in_size, cell_size)
 				#this will be reused
 				Wi = self._weight_variable([self._input_size, self._cell_size])
-				print (Wi.name)
 				#bs (cell_size,)
 				bi = self._bias_variable([self._cell_size])
 
@@ -66,15 +65,16 @@ class RNN(object):
 				self._pred = tf.nn.relu(product)
 
 		with tf.name_scope('cost'):
-			_pred = tf.reshape(_pred, [self._batch_size, self._time_steps, self._output_size])
-			mse = self.ms_error(_pred, self._ys)
+			self._pred = tf.reshape(self._pred, [self._batch_size, self._time_steps, self._output_size])
+			mse = self.ms_error(self._pred, self._ys)
 			mse_ave_across_batch = tf.reduce_mean(mse, 0)	#(time_steps, output_size)
-			mse_sum_acorss_time = tf.reduc_sum(mse_ave_across_batch, 0)	#(output_size)
+			mse_sum_acorss_time = tf.reduce_sum(mse_ave_across_batch, 0)	#(output_size)
 			self._cost = mse_sum_acorss_time
+			print (self._cost.shape)
 			self._cost_ave_time = self._cost/self._time_steps 
 
 		with tf.variable_scope('train'):
-			self.train_op = tf.train.AdamOptimizer(self.lr).minimize(self._cost)
+			self.train_op = tf.train.AdamOptimizer(self._lr).minimize(self._cost)
 
 	@staticmethod
 	def ms_error(y_target, y_pre):
@@ -88,7 +88,7 @@ class RNN(object):
 	@staticmethod
 	def _bias_variable(shape, name='bias'):
 		initializer = tf.constant_initializer(0.1)
-		return tf.get_variabel(name=name, shape=shape, initializer=initializer)
+		return tf.get_variable(name=name, shape=shape, initializer=initializer)
 
 if __name__=='__main__':
 	train_config = TrainConfig()

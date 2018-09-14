@@ -35,7 +35,7 @@ class RNN(object):
 			#l_in_y: (batch_size*time_steps, cell_size)
 			with tf.name_scope('Wx_plus_b'):
 				l_in_y = tf.matmul(l_in_x, Wi) + bi 
-			l_in_y = tf.reshape(l_in_y, [-1, tf._time_steps, self._cell_size])
+			l_in_y = tf.reshape(l_in_y, [-1, self._time_steps, self._cell_size])
 
 		with tf.variable_scope('cell'):
 			cell = tf.contrib.rnn.BasicLSTMCell(self._cell_size)

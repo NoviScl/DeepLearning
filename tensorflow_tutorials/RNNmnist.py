@@ -63,16 +63,23 @@ def RNN(X, weights, bias):
     #this method only works if it's many-to-one
     #results = tf.matmul(states[1], weights['out']) + bias['out']
 
+    # final_state, has two elements: the cell_state, 
+    # and the last output for each element of the batch
+
     #OR:
-    #unpack to list steps*[(batch, outputs)], (default unstack axis=0)
+    #unstack to list steps*[(batch, outputs)], (default unstack axis=0)
     #outputs = tf.unstack(tf.transpose(outputs, [1,0,2]))    #output states (at) become the last output
+    #unstack for axis=0 is useless...
+    outputs = tf.transpose(outputs, [1,0,2])
     #same as:
-    outputs = tf.unstack(outputs, axis=1)
+    #if axis==1: each element is slice value[:, i, :, :]
+    #outputs = tf.unstack(outputs, axis=1)
     results = tf.matmul(outputs[-1], weights['out']) + bias['out']
 
     return results
 
 pred = RNN(x, weights, bias)
+#sparse: label is one index, normal: one_hot labels
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=pred, labels=y))
 train_op = tf.train.AdamOptimizer(lr).minimize(cost)
 

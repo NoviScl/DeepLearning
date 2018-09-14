@@ -13,7 +13,7 @@ def skipgram():
 		loss = tf.reduce_mean(tf.nn.nce_loss(weights=weights, biases=biases, labels=batch_labels, 
 			inputs=batch_inputs, num_sampled=num_sampled, num_class=vocabulary_size))
 
-		norm = tf.srqt(tf.reduce_mean(tf.square(embeddings), 1, keepdims=True))
+		norm = tf.sqrt(tf.reduce_mean(tf.square(embeddings), 1, keepdims=True))
 		normalized_embeddings = embeddings/norm
 
 		val_embeddings = tf.nn.embedding_lookup(normalized_embeddings, val_dataset)

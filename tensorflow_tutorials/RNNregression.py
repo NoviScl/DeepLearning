@@ -64,7 +64,8 @@ class LSTMRNN(object):
 			self.cell_init_state = lstm_cell.zero_state(self.batch_size, dtype=tf.float32)
 		self.cell_outputs, self.cell_final_state = tf.nn.dynamic_rnn(
 			lstm_cell, self.l_in_y, initial_state=self.cell_init_state, time_major=False)
-
+		#outputs: [batch_size, max_time, cell.output_size]
+		#states: [last_hidden_state, last_output_state], state shape: batch_size*outptu_size
 	def add_output_layer(self):
 		#shape: (batch*steps, cell_size)
 		l_out_x = tf.reshape(self.cell_outputs, [-1, self.cell_size], name='2_2D')
@@ -105,13 +106,14 @@ class LSTMRNN(object):
 	#tf.get_variable will check whether the variable(with same name) exists already or not
 	#tf.Variable creates new variable every time
 	#here use tf.Variable also can because we are not sharing variables (only one W and one b to train)
+	#but it's a good practice to use get_variables because we can reuse the weights many times then
 	def _weight_variables(self, shape, name='weights'):
 		initializer = tf.random_normal_initializer(mean=0., stddev=1.)
 		return tf.get_variable(shape=shape, initializer=initializer, name=name)
 
 	def _bias_variable(self, shape, name='bias'):
 		initializer = tf.constant_initializer(0.1)
-		return tf.get_variable(name=name, shape=shape, initializer=initializer)
+		return tf.get_variable(name=name, shape=shape, initializer=initializer, name=name)
 
 if __name__=='__main__':
 	model = LSTMRNN(TIME_STEPS, INPUT_SIZE, OUTPUT_SIZE, CELL_SIZE, BATCH_SIZE)
@@ -151,6 +153,6 @@ if __name__=='__main__':
 		if i%20 == 0:
 			print ('cost: ', round(cost, 4))
 			result = sess.run(merged, feed_dict)
-			writer.add_summary(result, i)
+			#writer.add_summary(result, i)
 
 
