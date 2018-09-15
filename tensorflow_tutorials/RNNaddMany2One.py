@@ -136,13 +136,13 @@ for j in range(100000):
     ba_update *= 0
     
     # print out progress
-    if(j % 1000 == 0):
+    if(j % 10000 == 0):
         print ("Error:" + str(overallError))
         errors.append(overallError)
-        # print ("Pred:" + str(final_pred))
-        # print ("True:" + str(c_int))
-        # print (str(a_int) + " + " + str(b_int) + " = " + str(final_pred))
-        # print ("------------")
+        print ("Pred:" + str(final_pred))
+        print ("True:" + str(c_int))
+        print (str(a_int) + " + " + str(b_int) + " = " + str(final_pred))
+        print ("------------")
 
 
 plt.plot(errors)
